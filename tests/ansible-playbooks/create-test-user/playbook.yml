@@ -1,0 +1,76 @@
+---
+- name:  Host Summary
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Make sure we have a 'docker' group
+      group:
+        name: docker
+        state: present
+
+    - name: Make sure we have a 'kvm' group
+      group:
+        name: kvm
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+      become: yes
+
+    - name: Create test user in the wheel, kvm, and docker groups
+      user: 
+        name: test
+        groups: wheel,docker,kvm
+        append: yes
+        state: present
+        createhome: yes
+      become: yes
+
+    - name: Set up authorized keys for the test user
+      authorized_key:
+        user: test
+        key: "{{ item }}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+
+    - name: Create .ssh directory for test user
+      file:
+        path: /home/test/.ssh
+        state: directory
+        owner: test
+        group: test
+      become: yes
+
+    - name: Create keypair so that test user can use passwordless SSH as root
+      openssh_keypair:
+        path: /home/test/.ssh/id_rsa
+        owner: test
+        group: test
+      register: keypair
+      become: yes
+
+    - name: Update the new public key to be owned by the test user
+      file:
+        path: /home/test/.ssh/id_rsa.pub
+        owner: test
+        group: test
+      become: yes
+
+    - name: Allow test user to ssh as root
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ keypair.public_key }}"
+      become: yes
+
