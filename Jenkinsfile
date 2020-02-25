@@ -3,7 +3,7 @@ properties(
     parameters(
       [
         [$class: 'ValidatingStringParameterDefinition',
-         defaultValue: 'ppc64le,aarch64'
+         defaultValue: 'ppc64le,aarch64',
          description: 'A comma separated list of architectures to run the test on. Valid values include [x86_64, ppc64le, aarch64, s390x].',
          failedValidationMessage: 'Invalid architecture. Valid values are [x86_64, ppc64le, aarch64, s390x].',
          name: 'ARCHES',
