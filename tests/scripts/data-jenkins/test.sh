@@ -1,6 +1,6 @@
 #!/bin/bash
 
 cd Data-Structures/Substring_Reverse_Pattern/
-yum install gcc
+yum install -y gcc
 gcc substring.cpp
 ./a.out
