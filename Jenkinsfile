@@ -53,6 +53,7 @@ library(
 List arches = params.ARCHES.tokenize(',')
 def errorMessages = ''
 def config = MAQEAPI.v1.getProvisioningConfig(this)
+config.jobgroup = 'multiarch-qe'
 
 MAQEAPI.v1.runParallelMultiArchTest(
   this,
