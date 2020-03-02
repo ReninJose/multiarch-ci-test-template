@@ -55,7 +55,20 @@ def errorMessages = ''
 def config = MAQEAPI.v1.getProvisioningConfig(this)
 config.jobgroup = 'multiarch-qe'
 
-MAQEAPI.v1.runParallelMultiArchTest(
+def targetHosts = []
+for (String arch in arches) {
+  def targetHost = MAQEAPI.v1.newTargetHost()
+  targetHost.name = arch
+  targetHost.arch = arch
+  targetHost.distro = distro
+  targetHost.variant = variant
+  targetHost.scriptParams = "username password"
+  targetHost.inventoryVars = [
+    ansible_ssh_private_key_file:'/home/jenkins/.ssh/id_rsa',
+    ansible_ssh_common_args:'"-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"',
+  ]
+
+MAQEAPI.v1.runTest(
   this,
   arches,
   config,
