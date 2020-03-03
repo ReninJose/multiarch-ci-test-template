@@ -61,12 +61,13 @@ for (String arch in arches) {
   targetHost.name = arch
   targetHost.arch = arch
   targetHost.scriptParams = "username password"
+  targetHosts.push(targetHost)
 }
   
 
 MAQEAPI.v1.runTest(
   this,
-  arches,
+  targetHosts,
   config,
   { host ->
     /*********************************************************/
