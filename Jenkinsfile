@@ -60,9 +60,9 @@ for (String arch in arches) {
   def targetHost = MAQEAPI.v1.newTargetHost()
   targetHost.name = arch
   targetHost.arch = arch
-  withCredentials([credentialsId:"dummy",
-                 usernameVariable:'USERNAME',
-                 passwordVariable:'PASSWORD']){
+  withCredentials(script.usernamePassword([credentialsId:"dummy",
+                 			   usernameVariable:'USERNAME',
+                 			   passwordVariable:'PASSWORD']),){
                         targetHosts.scriptParams = "$USERNAME $PASSWORD"
 	}
   targetHosts.push(targetHost)
