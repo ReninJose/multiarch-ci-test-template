@@ -56,7 +56,6 @@ def config = MAQEAPI.v1.getProvisioningConfig(this)
 config.jobgroup = 'multiarch-qe'
 
 def targetHosts = []
-}
 for (String arch in arches) {
   def targetHost = MAQEAPI.v1.newTargetHost()
   targetHost.name = arch
