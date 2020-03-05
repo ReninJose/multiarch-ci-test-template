@@ -63,7 +63,7 @@ for (String arch in arches) {
   withCredentials([
 	usernamePassword(credentialsId:"dummy", usernameVariable:'USERNAME', passwordVariable:'PASSWORD'),
 	]){
-                        targetHosts.scriptParams = "$USERNAME $PASSWORD"
+                        targetHost.scriptParams = "$USERNAME $PASSWORD"
 	}
   targetHosts.push(targetHost)
 }
