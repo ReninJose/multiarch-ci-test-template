@@ -61,7 +61,9 @@ for (String arch in arches) {
   targetHost.name = arch
   targetHost.arch = arch
   withCredentials([
-	usernamePassword(credentialsId:"osp16-gitlab-consulting-rh", usernameVariable:'USERNAME', passwordVariable:'PASSWORD'),
+	usernamePassword(credentialsId:"osp16-gitlab-consulting-rh", 
+			 usernameVariable:'USERNAME', 
+			 passwordVariable:'PASSWORD'),
 	]){
                         targetHost.scriptParams = "$USERNAME $PASSWORD"
 	}
