@@ -39,6 +39,16 @@ properties(
           description: 'Contains the CI_MESSAGE for a message bus triggered build.',
           name: 'CI_MESSAGE'
         )
+	string(
+	  defaultValue: '',
+	  description: 'Hostname of the preprovisoined host.',
+	  name: 'PREPROVISIONED_HOST'
+	)
+	string(
+	  defaultValue:'osp-jenkins-private-key',
+	  description: 'SSH private key Jenkins credential ID for Beaker/SSH operations',
+	  name: 'SSHPRIVKEYCREDENTIALID'
+	) 
       ]
     )
   ]
@@ -55,21 +65,11 @@ def errorMessages = ''
 def config = MAQEAPI.v1.getProvisioningConfig(this)
 config.jobgroup = 'multiarch-qe'
 
-def targetHosts = []
-for (String arch in arches) {
-  def targetHost = MAQEAPI.v1.newTargetHost()
-  targetHost.name = arch
-  targetHost.arch = arch
-  withCredentials([
-	usernamePassword(credentialsId:"osp16-gitlab-consulting-rh", 
-			 usernameVariable:'USERNAME', 
-			 passwordVariable:'PASSWORD'),
-	]){
-                        targetHost.scriptParams = "$USERNAME $PASSWORD"
-	}
-  targetHosts.push(targetHost)
-}
-  
+def targetHost = MAQEAPI.vi.newTargetHost()
+targetHost.hostname = params.PREPROVISIONED_HOST
+targetHost.name = params.PREPROVISIONED_HOST
+targetHost.arch = 'x86_64'
+targetHost.provisioner = 'NOOP'
 
 MAQEAPI.v1.runTest(
   this,
